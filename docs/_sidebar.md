@@ -1,8 +1,5 @@
 * [首页](/)
 * 实验指导
-	* [Simulation使用帮助](/module/Simulation) 
-	* [乘法器设计](/module/unsigned_multiplier) 
-	* [ports与顶层模块](/module/ports)
-	* [加法器与数码管](/module/adder)
+	* [处理器模型](/module/CPU_Model) 
 * [常见问题](Problems)
 * [验收要求](grading)
