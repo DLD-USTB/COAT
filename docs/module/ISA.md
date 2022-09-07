@@ -55,16 +55,61 @@ sw $9,c
 
 > 如果想在高级语言中体会一下这种全靠条件判断和指令跳转来实现的循环分支过程调用结构，可以体会一下if + goto的组合，btw，某个科目的某个实验题要求必须不用循环实现，亲测可以用if+goto逃课(
 
+对于一个分支结构
 
+```c
+if(a > b){
+	c = 1;
+} else {
+	c = 2;
+}
+```
+
+对应的汇编语言可以写作
+
+```assembly
+	lw $8, a
+	lw $9, b
+	slt $10, $8, $9
+	blez $10, else
+	li $11, 1
+	sw $11, c
+else:
+	li $11, 2
+	sw $11, c
+```
 
 
 
 ####  Directives & Instruction
 
-汇编代码中，有一些内容并不是指令集种包括的内容，诸如li指令，事实上并不存在于MIPS指令集架构中，或是这样的命令.data指示程序所在的段。
+汇编代码中，有一些内容并不是指令集种包括的内容，诸如前面出现的li指令，事实上并不存在于MIPS指令集架构中，或是这样的命令.data指示程序所在的段。
 
 可以看到，上面的部分中，我特意采用了指令和命令两个翻译。部分中文书将Directives和Pseudo Instruction都称之为伪指令，在这里，为了叙述方便，我们将Pseudo Instruction成为伪指令，成为Directive为命令。
 
 ### 测试用例使用
 
-测试程序的入口位于Start.S中，其中的代码
+测试程序的入口位于Start.S中，程序入口为_start处，该处代码摘录如下
+
+```assembly
+_start:
+start:
+    LI (t0, 0xffffffff)
+    addiu t0, zero, 0xffff
+	b	locate
+	nop
+```
+
+其中LI是一个宏，用于载入立即数。我们知道MIPS当中的立即数长度是16位，那么如何加入一个32位的立即数到寄存器中呢？这里采用了lui和addiu两条指令进行处理。该宏的定义如下。
+
+```assembly
+#define LI(reg, imm) \
+    lui     reg, %hi(imm); \
+    addiu   reg, %lo(imm);
+```
+
+然后通过b指令跳转至locate处，该处代码如下：
+
+```
+```
+
