@@ -1,5 +1,10 @@
 * [首页](/)
 * 实验指导
 	* [处理器模型](/module/CPU_Model) 
+	* [MIPS指令集，汇编，与测试用例](module/ISA)
+	* [乘除法器](module/mdu)
+	* [设备输入输出与AXI总线](module/IOandAXI)
+	* [Cache原理与设计](module/Cache)
+	* [中断异常](module/Exception)
 * [常见问题](Problems)
 * [验收要求](grading)
