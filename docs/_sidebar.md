@@ -1,6 +1,7 @@
 * [首页](/)
 * 实验指导
 	* [处理器模型](/module/CPU_Model) 
+	* [CDE环境与指令扩展](module/CDE)
 	* [MIPS指令集，汇编，与测试用例](module/ISA)
 	* [乘除法器](module/mdu)
 	* [设备输入输出与AXI总线](module/IOandAXI)

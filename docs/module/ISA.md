@@ -4,7 +4,7 @@
 
 ### MIPS指令集架构
 
-MIPS架构，全称Microprocessor without Interlocked Piped Stages architecture。MIPS作为自RISC的概念被提出后的几十年内，最为经典的精简指令集架构，被许多的教材广泛采纳，用于组成原理的体系结构的教学当中，其。（近十年随着RISC-V架构发展，很多经典书目的新版本都转向采用RISC-V作为RISC指令集的典范）。
+MIPS架构，全称Microprocessor without Interlocked Piped Stages architecture。MIPS作为自RISC的概念被提出后的几十年内，最为经典的精简指令集架构，被许多的教材广泛采纳，用于组成原理的体系结构的教学当中。（近十年随着RISC-V架构发展，很多经典书目的新版本都转向采用RISC-V作为RISC指令集的典范）。
 > MIPS同时也是Million Instructions Per Second的缩写，该单位往往用来衡量处理器的吞吐量
 
 MIPS架构可以分称MIPS64，MIPS32等，计组课设当中要求实现的指令集是MIPS32指令集的裁剪后的版本,为了方便下文提到MIPS都特指计组课设中要求实现的裁剪后的MIPS32指令集。
@@ -20,6 +20,8 @@ MIPS指令集中提供了32个通用寄存器，其中0号寄存器被硬编码�
 MIPS是一种Load-Store ISA，只能通过Load类指令和Store类指令访问存储器，（x86 ISA属于寄存器存储器架构，许多指令中都可以访问存储器，这一点或许大家在隔壁的汇编语言与接口实验中会体会到XD）。课设中MIPS架构采用小端序，即数据的低字节在地址的低位。
 
 MIPS的一大特点就是延迟槽（写在名字的那种）。在采用流水线处理器的CPU当中，往往无法取指阶段就立即判断出下一条指令是否需要进行跳转。为此，早期的设计者们采用了这种称为延迟槽的技术。其方法是，在分支指令的后面，插入一条指令，这条指令无论分支是否发生，都一定会被处理器执行。这条指令的选择依赖于编译器，编译器会分析指令间的相关性，然后在分支指令的后面插入一条无关的指令。这种做法要求比较复杂的编译器技术，所以很多时候会考虑直接插入NOP指令。在处理器技术发展的早期，延迟槽技术确实为处理器带来了一定的性能提升，但是随着处理器技术的发展，超标量技术，分支预测技术等的逐渐成熟，延迟槽技术逐渐鸡肋了起来，它将微架构层面的东西，过度暴露到了ISA层面，新兴指令集诸如RISC-V已经不再采用延迟槽技术。
+
+?> 请思考：1.  延迟槽中如果存放了跳转指令等指令，会出现何种现象。
 
 ###　MIPS汇编——以测试用例为例
 
@@ -39,11 +41,11 @@ int main(){
 }
 ```
 对于这样一段代码中c=a+b这条语句，在MIPS可以写作如下几条语句，其中的a和b会被转换为一个相对于某寄存器的地址，在本例中，应该会通过$gp寄存器，即实际上的28号寄存器。
-```assmebly
-lw $8,a
-lw $9,b
-add $8,$8,$9
-sw $9,c
+```assembly
+    lw $8,a
+    lw $9,b
+    add $8,$8,$9
+    sw $9,c
 ```
 
 
@@ -79,13 +81,50 @@ else:
 	sw $11, c
 ```
 
+?> 通过手中的gcc交叉编译环境，试试看循环和过程调用会转换成何种汇编代码。
 
+通过else这种label可以很方便的确定跳转的地址，在测试用例的代码中，你可能还会见到一些数字label，这些属于局部label，如果要访问当前指令后面的‘1:’ label，可以将代码写作如下的形式
+
+```
+	b 1f
+```
+
+这里的f是forward的意思，意思是向前查找（或者说向后，总之就是朝行号增加的方向行进）。同样的，如果代码的前方有一个名字为1的label，访问的方法是
+
+```
+	b 1b
+```
+
+此处的b是backward的意思。
+
+这些label的使用没有限制，总共为前向十个和后向十个，因为可用的局部编号按照0~9进行编号。
+
+> label是一个紧跟着’:‘的Symbol，而Symbol代表着当前的位置的地址。如果有多个Symbol，那么后面的一个Symbol会覆盖掉前面的Symbol。Symbol的名字一般以字母或'._'中的开头，某些机器上甚至可以‘$’,‘?’作为开头。
 
 ####  Directives & Instruction
 
-汇编代码中，有一些内容并不是指令集种包括的内容，诸如前面出现的li指令，事实上并不存在于MIPS指令集架构中，或是这样的命令.data指示程序所在的段。
+汇编代码中，有一些内容并不是指令集种包括的内容，诸如前面出现的`li`指令，事实上并不存在于MIPS指令集架构中，或是这样的命令`.data`指示程序所在的段。这些命令与指令大量出现于测试用例所在的汇编代码中。
 
 可以看到，上面的部分中，我特意采用了指令和命令两个翻译。部分中文书将Directives和Pseudo Instruction都称之为伪指令，在这里，为了叙述方便，我们将Pseudo Instruction成为伪指令，成为Directive为命令。
+
+伪指令是一系列能用的是指令集中没有提供，但是对于程序员编写汇编代码的效率有很大的帮助的指令。这些指令会被翻译成一条或若干条MIPS指令。伪指令是会被机器执行的指令。常用的伪指令有
+
+```assembly
+mov $rt, $rs
+li $rs,immed
+la $rs,addr
+```
+
+关于伪指令的更多了解，可以参考这个网页[[MIPS Assembly/Pseudoinstructions - Wikibooks, open books for an open world](https://en.m.wikibooks.org/wiki/MIPS_Assembly/Pseudoinstructions))
+
+命令是一系列对于编译器的提示，不会真正的被编译器执行，但是对于编译器链接器的工作有很大的帮助。在测试用例的汇编代码中，我们可以经常见到各式各样的命令。比如：
+
+```assembly
+.globl _start
+.org 0x380
+```
+
+其中`.globl`命令是让后面的符号变得使链接器可见，`.org`是将地址设为到当前段的地址的偏移地址。关于更多的命令的详细用法，你可以阅读GNU AS的手册，即[参考资料](#本章参考资料)的第二项。
 
 ### 测试用例使用
 
@@ -110,6 +149,81 @@ start:
 
 然后通过b指令跳转至locate处，该处代码如下：
 
+```assembly
+locate:
+	.set noreorder
+
+    LI (a0, LED_RG1_ADDR)
+    LI (a1, LED_RG0_ADDR)
+    LI (s1, NUM_ADDR)
+
+    LI (t1, 0x0002)
+    LI (t2, 0x0001)
+    lui s3, 0
+
+    sw t1, 0(a0)
+    sw t2, 0(a1)
+    sw s3, 0(s1)
+
+    lui s0, 0            ## initial run number
+
+    LA (t1, kseg1_kseg0) #####
+    LI (t2, 0x20000000)  ###
+    subu t9, t1, t2      #kseg1 -> kseg0
+    JR (t9)              ###
+    nop                  #####
 ```
+
+可以看到，这部分的代码主要功能是加载了几个地址，同时往这几个地址写入了若干数据。这几个地址的名称是LED_RG1_ADDR，LED_RG2_ADDR，NUM_ADDR，也就是LED灯，数码管的控制。这些命令通过SW指令向这些外设的配置寄存器写入数据，以达到控制外设的效果，这一点我们会在[设备输入输出与AXI总线](module/IOandAXI)进一步讨论。
+
+接下来的部分，即加载立即数kseg1_kseg0一直到跳转部分的代码，这部分写法涉及到MIPS的内存映射机制，可以参考Appendix A02文件的第五章进行了解。这里不加解释的给出结论，这部分的代码作用是跳转到kseg1_kseg0标签
+
+?> 请阅读Appendix A02， 解释对kseg1_kseg0标签减去0x20000000的作用。
+
+接下来的部分是测试代码的主体, 
+
+```assembly
+kseg1_kseg0:
+inst_test:
+    jal n1_lui_test      #lui
+    nop
+    jal wait_1s
+    nop
+
+    LA (t9, kseg0_kseg1) #####
+    JR (t9)              #kseg0 -> kseg1
+    nop                  #####
+
+kseg0_kseg1:
+    jal n2_addu_test   #addu
+    nop
+    jal wait_1s
+    nop
+    jal n3_addiu_test  #addiu
+    nop
+    jal wait_1s
+    nop
+    jal n4_beq_test    #beq
+    nop
+    jal wait_1s
+    nop
+    jal n5_bne_test    #bne
+    ...
 ```
+
+可以看到，测试代码是通过`jal testcase`跳转到具体的测试点，进行某条指令的测试，测试完成后，会跳转到wait_1s。完成wait_1s函数的执行后，则会跳转回来执行下一个测试点。
+
+?> 请阅读代码找到wait_1s函数的定义，并解释其功能
+
+测试点共有89个，在soft/func/inst/目录下，可以找到每个测试点的文件。文件名代表了每个测试点作用和含义，其中带ex标识的指的是含有异常处理的程序，在个人任务阶段不要求完成。对于每个同学，自选的指令扩展，需要通过这些测试点进行测试，同学们可以自行修改start.S中的代码，选择需要进行测试的测试点（全部跑完89个测试用例时间太长），以此验证处理器代码是否正确。
+
+?> **任务**：自行修改Start.S文件，加入需要扩展的指令对应的测试点，通过交叉编译环境生成coe文件，对扩展的指令进行测试。
+
+!> 再次强调，个人扩展指令任务，需要通过对应指令的功能点测试，方可确认完成。
+
+### 本章参考资料
+
+[1] 汪文祥，邢金璋.《CPU设计实战》[M]北京：机械工业出版社，2021.1
+
+[2] [*Dean Elsner, Jay Fenlason & friends*《Using As: The GNU Assembler》](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_node/)
 
