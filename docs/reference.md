@@ -5,3 +5,10 @@
 3. 《自己动手写CPU》
 4. 《计算机体系结构:量化研究方法》
 5. [《AMBA® AXI™ and ACE™ Protocol Specification》](document/IHI0022E_amba_axi_and_ace_protocol_spec.pdf)
+
+
+
+## 必要资源
+
+[龙芯MIPS编译环境](document/gcc-4.3-ls232.tar.gz)
+
