@@ -4,8 +4,4 @@
 2. 《CPU设计实战》汪文祥 邢金璋
 3. 《自己动手写CPU》
 4. 《计算机体系结构:量化研究方法》
-5. [《AMBA® AXI™ and ACE™ Protocol Specification》](document/axi4.pdf)
-6. 
-
-### 其他教程
-
+5. [《AMBA® AXI™ and ACE™ Protocol Specification》](document/IHI0022E_amba_axi_and_ace_protocol_spec.pdf)
