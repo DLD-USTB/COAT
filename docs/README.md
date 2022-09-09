@@ -20,6 +20,8 @@
 
 *当自己已经充分尝试过以上方法时*，你可以向助教，老师，或者是其他同学求助，但是希望你在提问的过程中，能够尽量清晰的描述你的问题，帮助你提问的人能够更快理解你当前所面对的情况，更好的解决问题。
 
+> 关于如何提问，你可以阅读[《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md)或[《别像弱智一样提问》](https://github.com/tangx/Stop-Ask-Questions-The-Stupid-Ways/blob/master/README.md)，上面的三板斧和正确提问的方法是计算机世界的答案之书，在本门课程的理论内容的学习之外，我更希望大家能够学会正确的提问，学会正确而高效的寻找答案的方法。
+
 ## 课程要求
 
 课程要求分为个人要求和团队要求。个人要求占60分，团队要求占40分。
