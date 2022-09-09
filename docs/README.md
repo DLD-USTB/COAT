@@ -48,3 +48,48 @@
 4. **《计算机组成原理课程设计指导书补充内容》**。本书介绍了在TinyMIPS的基础上扩展乘除法指令和异常处理的内容。
 
 5. **Appendix压缩包。**其中A02介绍了MIPS指令集的规范，需要重点阅读，其他部分可以等有需要的时候在进行阅读。
+
+## 课程学习路线
+
+<div id="timeline1" class = "block">
+
+  <el-timeline >
+    <el-timeline-item
+      v-for="(activity, index) in activities"
+      :key="index"
+      :timestamp="activity.timestamp"
+      :color="activity.color">
+      <h4>{{activity.title}}</h4>
+      {{activity.content}}
+    </el-timeline-item>
+  </el-timeline>
+</div>
+
+<script type="text/javascript">
+{
+    let a = new Vue({
+        el: '#timeline1',
+        data:{
+        reverse: true,
+        activities: [{
+          title:'TinyMIPS工程结构学习',
+          content: '处理器各部分功能模块了解',
+          color:'green',
+          timestamp: '第一周'
+        }, {
+          title:'流水线前递与暂停机制学习',
+          content: '了解流水线处理器基本原理',
+          timestamp: '第二周'
+        }, {
+          content: '指令扩展，完成若干条指令的验收',
+          timestamp: '第三周'
+        },{
+          content:'异常处理机制',
+          timestamp:'第四周'
+        }]
+
+    }
+  });
+    }
+
+</script>
