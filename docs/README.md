@@ -113,10 +113,12 @@
         },{
           title:'扩展任务——答疑',
           content:'按小组安排自行规划任务',
+          timestamp:'第七周',
           ref:'待补充'
         },{
           title:'扩展任务——团队答辩',
           content:'完成答辩',
+          timestamp:'第八周',
           ref:'待补充'
         }]
 
