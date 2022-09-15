@@ -7,5 +7,8 @@
 	* [设备输入输出与AXI总线](module/IOandAXI)
 	* [Cache原理与设计](module/Cache)
 	* [中断异常](module/Exception)
+* [PPT汇总](/ppt.md)
+	* [从单周期到流水线](/slides/L1)
+	
 * [验收要求](grading)
 * [参考资料与必要资源下载](reference)
