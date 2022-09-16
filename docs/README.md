@@ -91,12 +91,13 @@
           title:'TinyMIPS工程结构学习',
           content: '<ul><li>复习Verilog和计算机组成原理。</li><li>了解处理器各部分功能模块</li><li>完成第二章CG评测题</li><ul>',
           type:' success',
-          color:'blue',
+          color:'green',
           timestamp: '第一周',
           ref:'《计算机组成原理课程设计指导书 上》,《计算机组成原理课程设计指导书 下》第二章,视频资料:TinyMIPS的22条指令和五级流水线介绍'
         }, {
           title:'流水线前递与暂停机制学习',
-          content: '<ul><li>了解流水线处理器基本原理</li><li>完成第三章CG评测题</li><li>完成[虚拟仿真实验平台](https://www.ilab-x.com/details/page?id=6594&isView=true)任务</li></ul>',
+          content: '<ul><li>了解流水线处理器基本原理</li><li>完成第三章CG评测题</li><li>完成<a href="https://www.ilab-x.com/details/page?id=6594&isView=true")>虚拟仿真实验平台</a>任务</li></ul>',
+          color:'blue',
           timestamp: '第二周',
           ref:'《计算机组成原理课程设计指导书 下》第三章,视频资料:读写相关的产生与解决'
         }, {
