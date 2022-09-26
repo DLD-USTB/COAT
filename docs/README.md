@@ -97,11 +97,12 @@
         }, {
           title:'流水线前递与暂停机制学习',
           content: '<ul><li>了解流水线处理器基本原理</li><li>完成第三章CG评测题</li><li>完成<a href="https://www.ilab-x.com/details/page?id=6594&isView=true")>虚拟仿真实验平台</a>任务</li></ul>',
-          color:'blue',
+          color:'green',
           timestamp: '第二周',
           ref:'《计算机组成原理课程设计指导书 下》第三章,视频资料:读写相关的产生与解决'
         }, {
           title:'个人指令扩展',
+          color:'blue',
           content: '<ul><li>学习CDE仿真环境的使用</li><li>结合讲义和自己对TinyMIPS工程的理解。完成若干条指令的验收</li><ul>',
           timestamp: '第三周',
           ref:'《计算机组成原理课程设计指导书 上》讲义三'
@@ -131,6 +132,7 @@
           timestamp:'第八周',
           ref:'待补充'
         }]
+
 
     }
   });
