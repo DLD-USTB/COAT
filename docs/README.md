@@ -102,29 +102,36 @@
           ref:'《计算机组成原理课程设计指导书 下》第三章,视频资料:读写相关的产生与解决'
         }, {
           title:'个人指令扩展',
-          color:'blue',
+          color:'green',
           content: '<ul><li>学习CDE仿真环境的使用</li><li>结合讲义和自己对TinyMIPS工程的理解。完成若干条指令的验收</li><ul>',
           timestamp: '第三周',
           ref:'《计算机组成原理课程设计指导书 上》讲义三'
         },{
+          title:'个人指令扩展',
+          color:'green',
+          content: '<ul><li>继续完成指令集扩展</li><li>欢度国庆三天长假</li><ul>',
+          timestamp: '第四周',
+          ref:'《计算机组成原理课程设计指导书 上》讲义三'
+        },{
           title:'扩展任务——乘除法器设计/异常处理',
           content:'<ul><li>学习异常处理机制和乘除法器设计</li><li>按小组安排自行规划任务</li><ul>',
-          timestamp:'第四周',
+          timestamp:'第五周',
+          color:'blue',
           ref:'《计算机组成原理课程设计指导书补充内容》《计算机体系结构基础 第三版》'
         },{
           title:'扩展任务——AXI总线/设备输入输出',
           content:'<ul><li>学习AXI总线和设备输入输出</li><li>按小组安排自行规划任务</li><ul>',
-          timestamp:'第五周',
+          timestamp:'第六周',
           ref:'待补充'
         },{
           title:'扩展任务——Cache设计与实现',
           content:'<ul><li>学习Cache的设计与实现</li><li>按小组安排自行规划任务</li><ul>',
-          timestamp:'第六周',
+          timestamp:'第七周',
           ref:'待补充'
         },{
-          title:'扩展任务——答疑',
+          title:'扩展任务——答辩',
           content:'按小组安排自行规划任务',
-          timestamp:'第七周',
+          timestamp:'第八周',
           ref:'待补充'
         },{
           title:'扩展任务——团队答辩',
