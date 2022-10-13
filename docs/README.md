@@ -102,11 +102,12 @@
           ref:'《计算机组成原理课程设计指导书 下》第三章,视频资料:读写相关的产生与解决'
         }, {
           title:'个人指令扩展',
-          color:'blue',
+          color:'green',
           content: '<ul><li>学习CDE仿真环境的使用</li><li>结合讲义和自己对TinyMIPS工程的理解。完成若干条指令的验收</li><ul>',
           timestamp: '第三周',
           ref:'《计算机组成原理课程设计指导书 上》讲义三'
         },{
+          color:'green',
           title:'扩展任务——乘除法器设计/异常处理',
           content:'<ul><li>学习异常处理机制和乘除法器设计</li><li>按小组安排自行规划任务</li><ul>',
           timestamp:'第四周',
