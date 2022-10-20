@@ -108,7 +108,7 @@ Syscall和Break指令分别会触发系统调用异常(Sys)，断点异常(Bp)�
 
 试想下面的指令序列，有一条访存指令，该访存指令访问的地址不对齐，其后跟上了一条syscall指令，如下图所示
 
-![image-20221012201559958](G:\FileGitRepo\COAT\docs\module\module.assets\image-20221012201559958.png)
+![image-20221012201559958](module\module.assets\image-20221012201559958.png)
 
 时序上ID级异常先被发现，这样就会出现我们先处理ID级的异常。这也就违背了我们向ISA承诺的**顺序执行指令**，不符合ISA提供的处理器模型。
 
