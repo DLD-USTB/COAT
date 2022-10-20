@@ -117,11 +117,12 @@
           title:'扩展任务——乘除法器设计/异常处理',
           content:'<ul><li>学习异常处理机制和乘除法器设计</li><li>按小组安排自行规划任务</li><ul>',
           timestamp:'第五周',
-          color:'blue',
+          color:'green',
           ref:'《计算机组成原理课程设计指导书补充内容》《计算机体系结构基础 第三版》'
         },{
           title:'扩展任务——AXI总线/设备输入输出',
           content:'<ul><li>学习AXI总线和设备输入输出</li><li>按小组安排自行规划任务</li><ul>',
+          color:'blue',  
           timestamp:'第六周',
           ref:'待补充'
         },{

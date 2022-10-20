@@ -18,6 +18,94 @@
 
 限于时间，本部分对于乘法器只能泛泛介绍，具体的原理与实现方法，可以参考[第 8 章 运算器设计 | 计算机体系结构基础 (foxsen.github.io)](https://foxsen.github.io/archbase/运算器设计.html#定点补码乘法器)
 
+一位迭代乘法器示例伪代码如下，如果你要采用下面的设计，请自己思考。
+
+!> 此代码不能直接运行
+
+```verilog
+module Mult(
+    input clk, 
+    input rst,
+    input [31 : 0] oprand1,// X
+    input [31 : 0] oprand2,// Y
+    input signbit, // is 2's component or not
+    input en ,     // the enable signal of multiplier
+    output [63 : 0 ] result, // X * Y
+    output done
+);
+
+    parameter IDLE = 1'b0;
+    parameter CALCULATING = 1'b1;
+
+    reg state;
+    reg [65 : 0] multiplicand;
+    reg [33 : 0] multiplier;
+    reg [65 : 0 ] result_r; 
+    wire [65 : 0] parital_product;
+    wire carry;
+    
+    // the state machine
+    if (rst)begin
+        state <= IDLE;
+    end
+    else case(state)
+        IDLE:
+            if(en)begin
+                state <= CALCULATING;
+            end
+        CALCULATING:
+            if(!en)begin
+                state <= IDLE;
+            end
+        default:
+            state <= IDLE;
+    endcase  
+    
+    // the multiplicand
+    case(state)
+        IDLE:
+            if (en)begin
+                multiplicand <= {signbit&oprand1[31], oprand1};
+            end
+        CALCULATING:
+            multiplicand <= multiplicand << 1;
+    endcase
+    
+    // the multiplier
+    case(state)
+        IDLE:
+            if (en)begin
+                multiplier <= {signbit & oprand2[31], oprand2, 1'b0}; // add zero to multiplier as y_{-1}
+            end
+        CALCULATING:
+            multiplier <= multiplier >> 1;
+    endcase
+    
+    // calculating the result
+    case(state)
+        IDLE:
+            if (en)begin
+                result_r <= 0;
+            end
+        CALCULATING:
+            if (!done)begin
+                result_r <= result_r + parital_product + carry;
+            end
+    endcase 
+        
+    assign result = result_r[63 : 0];
+    // generate the -X
+    assign parital_product = multiplier[1:0] == 2'b01 ? multiplicand :
+                              multiplier[1:0] == 2'b10 ? ~multiplicand  :
+                                                 0;
+    assign carry = multiplier[1:0] == 2'b10 ? 1'b1 : 1'b0;
+    assign done = multiplier == 0;
+    
+endmodule
+```
+
+
+
 ### 除法器
 
 #### 无符号除法器
