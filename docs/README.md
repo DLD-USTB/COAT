@@ -122,23 +122,28 @@
         },{
           title:'扩展任务——AXI总线/设备输入输出',
           content:'<ul><li>学习AXI总线和设备输入输出</li><li>按小组安排自行规划任务</li><ul>',
-          color:'blue',  
+          color:'green',  
           timestamp:'第六周',
-          ref:'待补充'
+          ref:'AXI总线协议（见参考资料）'
         },{
           title:'扩展任务——Cache设计与实现',
+          color:'green',  
           content:'<ul><li>学习Cache的设计与实现</li><li>按小组安排自行规划任务</li><ul>',
           timestamp:'第七周',
-          ref:'待补充'
+          ref:'《超标量处理器设计》（见参考资料）'
         },{
-          title:'扩展任务——答辩',
+          title:'扩展任务——答疑',
+          color:'blue',  
           content:'按小组安排自行规划任务',
           timestamp:'第八周',
-          ref:'待补充'
+          ref:'无'
+        },{
+          title:'扩展任务——答辩',
+          content:'分组完成答辩',
+          timestamp:'第九周',
+          ref:'无'
         }
         ]
-
-
     }
   });
     }

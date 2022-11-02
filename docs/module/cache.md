@@ -78,23 +78,45 @@ Index的宽度事实上受限于我们的Cache大小决定，如果Cache有64个
 
 一般来说，Cache的way的数量越多，其抖动的现象越会减轻，但相应的Cache的访问效率也会降低。在Cache的大小一定时，当2^Index = n时，组相联Cache就会演变为全相联Cache，而当n=1时，Cache就会演变为直接映射Cache。
 
-### Cache一致性与Uncache
+### Uncache与Cache一致性
 
 Cache能够一定程度上解决存储器速度与主存之间差异过大的问题，然而Cache也引入了新的问题，也就是一致性问题和对于外设访问的问题。
 
-### Cache的代码实现
+#### Cache写入
 
-下面我们来指导大家实现一个直接相连Cache
+一般来说，我们会将CPU直接访问的L1 Cache划分为I-Cache和D-Cache，分别是Instruction Cache和Data Cache，我们的I-Cache只有读功能，然而，D-Cache则兼具读取与写入的功能。当我们向D-Cache进行写入操作时，我们是否需要将当前的写入操作，更新到下级存储器呢？我们将更新和不更新下级存储器这两种不同策略分别称为写穿法（Write Though）和写回法（Write Back）。
 
-```verilog
-module (
-    //对CPU
-    input en,
-    input cpu_addr,
-    output cpu_data
-    output valid,
-);
-    
-endmodule
-```
+写穿法，意味着下级存储器中始终都是最新的内容，没有D-Cache与内存不一致的问题。然而每次对D-Cache的写入，都会导致需要触发一次对总线的写操作，耗费的时钟周期更多。
+
+写回法，表示Cache的写入并不会直接更新内存当中的内容，而是将修改暂存在Cache中，如果发生Cache Miss的情况时，需要将被修改的Cache line写回到存储器中，保证正确性。为了标记一个Cache line是否发生了修改，每个Cache line需要增加一个Dirty位，如果该位使能，则意味该Cache line被修改了，该页是脏页，当发生该Cacheline的换入换出时，需要将修改后的内容写回到下级存储器。
+
+Cache写入的过程中，也同样会遇到Cache Miss，对于Miss的Cache line，也同样有两种方式解决。一种思路是，既然Cache line已经miss，直接将当前的数据写回下级存储器就好，这种思路称为Non-Write Allocate。而另一种与之相对的思路Write  Allocate，是，先将对应的Data Block从内存加载进来，与要写入的数据合并，然后存入Cache中。
+
+一般来说，Write though和Non-Write Allocate会配合使用，Write back和Write Allocate配合使用。
+
+#### Uncache
+
+当我们访问外设时，如果访存请求直接由Cache代理会怎么样呢？如果我们发起来一个对外设的读请求，Cache如果命中，就会从返回一个过去的已有的数据，没有时效性。如果我们发一个写请求，那么如果Cache采用了写回法，那么这个对外设的命令就没办法发送到对应的外设上。
+
+因此，对于对外设的访问需要实现Uncache，通过内存地址判断出一段地址是Cache区的数据或是Uncache区的数据。从而决定将访问请求发送到总线上还是Cache上，这一点可以通过一个简单的选通器实现。
+
+#### Cache一致性
+
+Cache实际上是一个内存数据中的备份，而备份往往会带来不一致问题，如果我们修改了多个备份中的一个，但是没有修改其他的备份，就会造成不一致的情况，这就是一致性问题。
+
+在划分为I，D两种Cache的我们的处理器当中，面临着何种一致性问题呢？不考虑其他复杂可以修改内存的外设（如DMA），我们的CPU对内存的修改只能通过对D-Cache的写入解决。对于D-Cache的写入，可能未修改的副本就有内存和I-Cache两种。CPU对内存的读写直接通过Cache代理，因此我们主要关注I-Cache与D-Cache的一致性问题。
+
+如果D-Cache和I-Cache存储的内容映射到了同一块内存区域，此时如果D-Cache中写入内容，那么I-Cache的内容却没有同时修改，这就会影响CPU的正确性。这种操作被称为自修改操作，当发生自修改时，为了维护Cache的一致性，一般有软件处理和硬件处理两种操作，软件处理就是通过Cache指令来实现。
+
+![image-20221030221238934](module.assets/image-20221030221238934.png)
+
+op与Cache操作的关系如下：
+
+| OP | 操作名称 | 地址使用方式 |功能描述|
+| ---- | ---- | ---- |----|
+| 0b00000 | Index Invalid | Index |用Index索引到I-Cache的Cache行，将该行无效|
+| 0b01000 | Hit Invalid | Hit |用有效地址查找I-Cache，若Cache Hit，则将Hit的改行置为无效|
+| 0b00001 | Index Writeback Invalid | Index |用Index索引到D-Cache的Cache行，若该行有效且脏，则将Cache行写回内存然后使该行无效，否则直接使得该行无效|
+| 0b10001 | Hit Invalid | Hit |用有效地址索引到D-Cache的Cache行，无论该行是否有效且脏，直接使该行无效|
+| 0b10101 | Hit Writeback Invalid | Hit |用有效索引到D-Cache的Cache行，若该行有效且脏，则将Cache行写回内存然后使改行无效，否则直接使得该行无效|
 

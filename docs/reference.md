@@ -2,7 +2,8 @@
 
 1. [《计算机体系结构基础 第三版》胡伟武](https://foxsen.github.io/archbase/)
 2. 《CPU设计实战》汪文祥 邢金璋
-3. 《自己动手写CPU》
+3. 《自己动手写CPU》雷思磊
+3. [《超标量处理器设计》姚永斌](document/超标量处理器设计.pdf ':ignore')
 3. 《计算机组成与设计：硬件软件接口》
 4. 《计算机体系结构:量化研究方法》
 5. [《AMBA® AXI™ and ACE™ Protocol Specification》](document/IHI0022E_amba_axi_and_ace_protocol_spec.pdf ':ignore')
