@@ -133,12 +133,13 @@
           ref:'《超标量处理器设计》（见参考资料）'
         },{
           title:'扩展任务——答疑',
-          color:'blue',  
+          color:'green',  
           content:'按小组安排自行规划任务',
           timestamp:'第八周',
           ref:'无'
         },{
           title:'扩展任务——答辩',
+          color:'blue',  
           content:'分组完成答辩',
           timestamp:'第九周',
           ref:'无'

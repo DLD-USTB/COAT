@@ -120,3 +120,131 @@ op与Cache操作的关系如下：
 | 0b10001 | Hit Invalid | Hit |用有效地址索引到D-Cache的Cache行，无论该行是否有效且脏，直接使该行无效|
 | 0b10101 | Hit Writeback Invalid | Hit |用有效索引到D-Cache的Cache行，若该行有效且脏，则将Cache行写回内存然后使改行无效，否则直接使得该行无效|
 
+> 计组课设中不会出现自修改现象，所以可以不实现
+
+### Cache设计
+
+一般来说，处理器的L1 Cache会分成I-Cache和D-Cache两个部分，I-Cache负责缓存指令，D-Cache负责缓存数据。对于实际设计中，I-Cache会更为简单，因为不用考虑I-Cache的写入，在计组课设当中，I-Cache也可以不做uncache。以下部分一个非常简单的Cache为例——一个直接映射的阻塞式状态机I-Cache。
+
+Cache的主体是Cache状态机，AXI总线控制器和Cache表三个部分。对于我们的实现来说，可以按照以下的步骤
+
+* 确定状态机
+* 根据状态给出各个时序部件的控制信号
+
+#### 总线接口
+
+I-Cache事实上兼具两个功能，一个是为CPU返回数据，一个是发起总线请求。
+
+发起总线请求的功能在原本的TinyMIPS中的AXI-Adapter就已经实现，该模块将CPU的访存请求直接转化为AXI上的访问请求。在实现Cache的过程中，为了降低单个数据项的访存成本，我们采用了Burst模式，一次访存可以从内存中读取多个数据项。对于总线的访问，可以单独设计成一个状态机，而不用将其与Cache的状态机融合。
+
+#### Cache表设计
+
+在这里我们设计了一个4KiB大小的I-Cache，一个Cache line存放8个字的数据项，换言之一个Cache line的数据大小为32B，需要五位的寻址空间。Cache大小为4KiB，因此Cache中应当有128个Cache line，index的空间应当是$log_2(128)=7$, Tag的大小为32位地址减去7位index和5位的block offset，共20位。
+
+对于Data部分，我们可以将所有的Cache数据都放在一个BRAM块中，也可以根据Block Offset，设计8个bank，每个bank中存放一个Cache数据，Tag采用另一个BRAM实现。Valid位采用寄存器堆实现。
+
+#### 处理器暂停
+
+Cache的访问可能会出现MISS，我们对Cache的访问也需要多于一个周期访问。因此，Cache的访问需要类似于AXI-Adapter的机制，从而暂停处理器的执行，暂停并不需要像AXI-Adapter那样暂停整个处理器，可以只暂停相关的流水线阶段。
+
+#### Cache状态机
+
+我们将Cache的工作分为四种状态，当没有处理任何来自CPU的访存请求时，其状态是IDLE态，对Cache进行查找判断是否命中是LOOKUP态，换入Cache数据是DATA态，对TAG和Valid位的更新是最后的TAG态
+
+IDLE阶段Cache接受来自外部的访存请求。这个阶段需要给BRAM中的Tag和data发出访存请求。
+
+LOOKUP阶段判断CPU的访问请求是否命中，这个阶段会获取到BRAM中的数据。
+
+TAG态更新BRAM中的TAG，以及Valid位。
+
+#### Cache代码实现
+
+主状态机的伪代码如下：
+
+```verilog
+reg cache_state;
+case(cache_state)
+    IDLE:if(sram_rd_en) cache_state <= LOOKUP;
+    LOOKUP:if(cache_miss)cache_state <= REPLACE;else cache_state <= IDLE;
+    REPLACE:if(axi_rvalid && axi_rready && axi_rlast)cache_state <= TAG;
+    TAG:cache_state <= IDLE;
+endcase
+```
+
+AXI状态机的伪代码如下：
+
+```verilog
+reg axi_rd_state;
+case(axi_rd_state)
+    IDLE:if(cache_miss) axi_rd_state <= ADDR;
+    ADDR:if(axi_arvalid && axi_arready)axi_rd_state <= ADDR;
+    DATA:if(axi_rvalid && axi_rready && axi_rlast)axi_rd_state <= DATA;
+endcase
+```
+
+两个状态机和Cache表是Cache设计中的主要时序器件，其他还有对地址的锁存等，此处不再赘述。
+
+根据状态机的状态，我们可以生成对CPU和总线的信号与对BRAM的控制信号。下面以Tag BRAM的控制为例展示如何分析控制信号的生成方式。
+
+```verilog
+sram_128x20 tag_bank(
+    .addra      (tag_index    )  ,
+    .clka       (clk             )  ,
+    .dina       (miss_tag        )  ,
+    .douta      (cache_tag       )  ,
+    .ena        (tag_en          )  ,
+    .wea        (write_tag_en    )   
+); 
+```
+
+当CPU发送过来一个访存请求时，我们需要对其访存地址进行拆分。
+
+```verilog
+assign {req_rd_tag,req_rd_index,req_rd_block_offset} = req_addr[31 : 2];
+```
+
+其中，tag用于判断命中，index用于访问data部分和对应的tag.
+
+* 一个访存请求来时，tag BRAM的地址应该为何呢？有两个时段我们需要对tag做操作，当IDLE的时候，我们需要发出读请求，当TAG时，我们需要写入BRAM，二者访问的地址是相同的，都来自于cpu发起的请求地址。
+
+  ```verilog
+  assign tag_index = req_rd_index;
+  ```
+
+* 何时需要使能tag BRAM? IDLE态有访存请求时需要使能，TAG态写入时需要使能。
+
+  ```verilog
+  assign tag_en = (cache_state == IDLE) && sram_rd_en || (cache_state == TAG) ;
+  ```
+
+  > 但仔细思考一下，在其他状态中Cache是否就必须要保持不使能呢？其实不然，因此这部分的逻辑也可以更加简化。
+
+*  何时需要写入tag BRAM?仅有TAG态需要使能，此时需要写入数据
+
+  ```verilog
+  assign write_tag_en = cache_state == TAG;
+  ```
+
+* 重新填回tag BRAM的内容是什么呢？
+
+  ```verilog
+  assign miss_tag = req_rd_tag;
+  ```
+
+* tag BRAM中输出的tag，其作用是判断Cache是否命中，判断方法如下
+
+  ```verilog
+  assign cache_hit = (req_rd_tag == cache_tag) && valid[req_rd_index];
+  ```
+
+限于时间关系，对于其他的控制信号的生成也可以按照类似的方式处理，分析在某个状态下改信号应当为何种值，通过代码将这种分析结果表达出来即可。
+
+---
+
+#### *不用总线的Cache*
+
+> 是的，cache也可以不实现总线，如果将cache读取数据的方式改为AXI_adapter里直接读取，就可以越过复杂的处理。这种cache的基本原理仍是局部性原理，因为你过去访问到的数据未来仍可能被用到。但是你不再能够充分利用Burst的优势降低单个数据项的访问时延。
+> 
+> 而对于Cache表的设计，你仍然能够采用上面介绍的设计Cache表的方法，但是你的单个Block大小就是1个字。由于此种Cache做的会比较小，所以你可以考虑采用直接采用寄存器堆实现，不用处理复杂的Cache表逻辑。
+> 
+> 实践证明，此种Cache虽然比较简陋，但是仍旧能对CPU性能起到一定的提升。
