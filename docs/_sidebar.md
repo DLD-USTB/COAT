@@ -1,18 +1,23 @@
 * [首页](/)
-* 实验指导
-	* [处理器模型](/module/CPU_Model) 
-	* [CDE环境与指令扩展](module/CDE)
-	* [MIPS指令集，汇编，与测试用例](module/ISA)
-	* [乘除法器](module/mdu)
-	* [设备输入输出与AXI总线](module/IOandAXI)
-	* [Cache原理与设计](module/Cache)
-	* [中断异常](module/Exception)
+* 计算机组成原理实验指导（试行）
+  * 认识实验环境
+  * 计算机软件系统之下——以RISC-V为例的计算机指令集
+  * 从一到无穷大——第一条指令与更多的指令
+  * 外设访问——DPI-C实现外设
+  * 存储系统——访存指令的实现
+* 计算机组成原理课程设计实验指导
+  * [处理器模型](/module/CPU_Model) 
+  * [CDE环境与指令扩展](module/CDE)
+  * [MIPS指令集，汇编，与测试用例](module/ISA)
+  * [乘除法器](module/mdu)
+  * [设备输入输出与AXI总线](module/IOandAXI)
+  * [Cache原理与设计](module/cache)
+  * [中断异常](module/Exception)
 * [PPT汇总](/ppt.md)
-	* [从单周期到流水线](/slides/L1)
-	* [MIPS，流水线，Trace比对](/slides/L2)
-	* [异常处理与乘除法器](/slides/L3)
-	* [设备输入输出与AXI总线](/slides/L4)
-	* [Cache原理与设计](/slides/L5)
-	
+  * [从单周期到流水线](/slides/L1)
+  * [MIPS，流水线，Trace比对](/slides/L2)
+  * [异常处理与乘除法器](/slides/L3)
+  * [设备输入输出与AXI总线](/slides/L4)
+  * [Cache原理与设计](/slides/L5)
 * [验收要求](grading)
 * [参考资料与必要资源下载](reference)
