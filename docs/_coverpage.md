@@ -1,7 +1,7 @@
 <!-- _coverpage.md -->
 
 
-# COAT <small>1.0.2</small>
+# COAT <small>1.1.0</small>
 
 Machine is cold, but COAT is warm
 
@@ -9,9 +9,7 @@ Machine is cold, but COAT is warm
 
 Welcome to the digital world!
 
-**本周课程进行至**
 
-[答辩周](#第九周)
 
 
 [开始数字之旅](#写在前面)
