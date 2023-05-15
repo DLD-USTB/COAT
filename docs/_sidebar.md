@@ -1,5 +1,10 @@
 * [首页](/)
-* 计算机组成原理实验指导（试行）
+* 计算机组成原理实验指导——minitinyMIPS
+  * [计算机组成原理实验说明](miniminimips/main)
+  * [处理器核实验指导书](miniminimips/old_guide)
+  * [内存外设实验指导书](miniminimips/mem_device)
+  * [实验工具链说明](miniminimips/env)
+* 计算机组成原理实验指导（试行，但是先咕了）
   * 认识实验环境
   * 计算机软件系统之下——以RISC-V为例的计算机指令集
   * 从一到无穷大——第一条指令与更多的指令
