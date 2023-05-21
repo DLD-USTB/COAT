@@ -34,7 +34,7 @@ load指令略有不同，一个小于寄存器宽度的数据（比如half word�
 
 mtMIPS的整体结构图如下图所示。可以看到，CPU的访存需求一共有两类，一类是指令的访存请求，一类是数据的访存请求。其中，数据的访存请求被连接到了Router模块。Router模块相当于一个总线控制器，总线上挂载着设备SimDevice，和内存Memory，Router需要根据访存的地址确认具体的访存请求时发送到设备还是内存，给对应模块发起访存请求。下面我们分别介绍访存系统中的三个模块的基本功能。
 
-![img](mem_device.assets/Top.jpg)
+![img](pics/Top.jpg)
 
 ### Memory模块
 

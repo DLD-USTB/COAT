@@ -31,6 +31,10 @@ mtMIPS提供了极为丰富的扩展主题，同学们可以根据自己兴趣�
 * [仿真实验环境使用说明](/miniminimips/env)
 
   实验环境的基本说明，包括整体的仿真框架结构，如何在通过GNU工具链得到一个可以在自己的CPU上运行的程序的过程。
+  
+* [mooc理论学习](https://www.icourse163.org/learn/PKU-1205809805?tid=1450251478#/learn/content?type=detail&id=1214429248&cid=1218115434&replay=true)
+
+  中国大学mooc课程，对于单周期处理器的设计进行了一定的讲解
 
 ## 实验问题反馈
 
