@@ -48,7 +48,21 @@
 
 ### 实验环境要求
 
-实验推荐在Linux操作系统下进行。处理器的仿真同样也可以在Windows下通过Vivado执行，也可以安装IcarusVerilog进行。但是如果你需要利用实验环境中提供的工具链对于汇编代码进行编译，你需要安装MIPS的交叉编译环境，对于采用APT作为包管理器的Linux系统，可以通过以下命令来执行
+实验推荐在Linux操作系统下进行。需要以下的工具链
+
+* python
+* gcc-mips-linux-gnu
+* IcarusVerilog(选择vivado仿真的同学请忽略)
+
+实验的仿真
+
+* 仿真在Linux下直接通过IcarusVerilog文件进行
+* 处理器的仿真同样也可以在Windows下通过Vivado执行，也可以安装IcarusVerilog进行。
+
+测试代码的编译和运行
+
+* 编译需要Linux的GNU工具链，缺少物理机的同学可以选择机房电脑，Linux虚拟机，WSL，以及其他同学。
+* 你需要安装MIPS的交叉编译环境，对于采用APT作为包管理器的Linux系统，可以通过以下命令来执行
 
 ```shell
 $ sudo apt install gcc-mips-linux-gnu
@@ -60,7 +74,7 @@ $ sudo apt install gcc-mips-linux-gnu
 
 对于使用Vivado仿真环境的同学，我们提供了基于Vivado的仿真工程，同时也提供了Vivado仿真工程的构建脚本`create_project.tcl`
 
-如果你使用Vivado2018.3版本，你可以直接打开位于vivado/project下的xpr文件，如果你使用其他版本的vivado，你可以选择升级vivado工程或是通过在vivado目录下重新运行create_project.tcl文件，关于tcl脚本的使用，可以直接上网查到。进入vivado工程后，按照正常流程仿真即可，不过需要注意的是，使用vivado仿真器，需要将mem.data放到正确的位置。
+如果你使用Vivado2018.3版本，你可以直接打开位于vivado/project下的xpr文件，如果你使用其他版本的vivado，你可以选择升级vivado工程或是通过在vivado目录下重新运行create_project.tcl文件，关于tcl脚本的使用，可以直接上网查到。进入vivado工程后，按照正常流程仿真即可，不过需要注意的是，使用vivado仿真器，需要将mem.data放到正确的位置，这一点在[处理器核部分指导书](/miniminimips/old_guide)中已经介绍了。
 
 对于Linux下使用IcarusVerilog的同学，只要你完成了IcarusVerilog的安装，在实验根目录下运行下面的指令进行仿真。
 
