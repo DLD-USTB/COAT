@@ -52,7 +52,9 @@ SimDevice是一个模拟串口的外设，当Router对其发起写入请求时�
 
 ### Router
 
-Router可以看作一个简单的总线控制器，挂载在其上的设备统一连接到总线的数据信号上，包括`common_addr`，`common_rdata`，`common_wdata`,`common_wstrb`,这些信号连接在挂载在总线上的每一个设备上。但是对于每个设备，有着额外的控制信号，控制读写操作的使能，比如device有着其独立的控制信号`device_wen`和`device_ren`。router的主要工作也就是根据CPU发送的地址，给这些独立的控制信号以使能。
+Router可以看作一个简单的总线控制器，挂载在其上的设备统一连接到总线的数据信号上，包括`common_rdata`，`common_wdata`, `common_wstrb`, 这些信号连接在挂载在总线上的每一个设备上。但是对于每个设备，有着额外的控制信号，控制读写操作的使能，比如device有着其独立的控制信号`device_wen`和`device_ren`。router的主要工作也就是根据CPU发送的地址，给这些独立的控制信号以使能。
+
+图中虽然将SimDevice和Memory的读数据端口挂在同一条数据线common_rdata上，如果采用共用common_rdata的方式，就需要采用三态门进行控制，但是FPGA上一般会用选择器来实现这种设计，因此实际的框架代码中，我们让给SimDevice和Memory分别连接了一个`rdata`信号。
 
 MIPS中留给外设的地址段，0xa0000000-0xbfffffff的，因此router可以通过地址高位对CPU发来的访存请求进行判断，将落在0xa0000000-0xbfffffff的访存请求，发给SimDevice，将对应`device_wen`和`device_ren`置为使能。在其他时候则信号置为0
 
