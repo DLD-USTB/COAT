@@ -59,7 +59,9 @@ SimDevice是一个模拟串口的外设，当Router对其发起写入请求时�
 `Router`可以被看作一个简单的总线控制器，挂载的设备统一连接到总线的数据信号上，包括`common_addr`、`common_wdata`、`common_wstrb`等信号，这些信号连接到每个挂载在总线上的设备上。但对于每个设备，还有额外的控制信号，用于控制读写操作的使能，比如设备具有独立的控制信号`device_wen`和`device_ren`。`Router`的主要工作就是根据`CPU`发送的地址，给这些独立的控制信号以使能。
 
 图中将`SimDevice`和`Memory`的读数据端口挂在同一条数据线`common_rdata`上，如果采用共用`common_rdata`的方式，就需要使用三态门进行控制。但是在`FPGA`上，通常会使用选择器来实现这种设计。因此，在实际的框架代码中，我们将`SimDevice`和`Memory`分别连接了一个`rdata`信号，在`Router`内部，我们会根据访存请求的地址，对`rdata`进行选择，选择合适的返回数据，返回给CPU。
+图中将`SimDevice`和`Memory`的读数据端口挂在同一条数据线`common_rdata`上，如果采用共用`common_rdata`的方式，就需要使用三态门进行控制。但是在`FPGA`上，通常会使用选择器来实现这种设计。因此，在实际的框架代码中，我们将`SimDevice`和`Memory`分别连接了一个`rdata`信号，在`Router`内部，我们会根据访存请求的地址，对`rdata`进行选择，选择合适的返回数据，返回给CPU。
 
+在`MIPS`中，外设留给的地址段是`0xa0000000-0xbfffffff`。因此，`Router`可以通过地址的高位对`CPU`发送的访存请求进行判断，将落在`0xa0000000-0xbfffffff`范围内的访存请求发送给`SimDevice`，并将相应的`device_wen`和`device_ren`置为使能。其他情况下，这些信号将被置为非使能状态。
 在`MIPS`中，外设留给的地址段是`0xa0000000-0xbfffffff`。因此，`Router`可以通过地址的高位对`CPU`发送的访存请求进行判断，将落在`0xa0000000-0xbfffffff`范围内的访存请求发送给`SimDevice`，并将相应的`device_wen`和`device_ren`置为使能。其他情况下，这些信号将被置为非使能状态。
 
 !> 注意，发给设备的请求不能再同时发给内存，请注意修改内存的控制信号
