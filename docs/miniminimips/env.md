@@ -1,5 +1,29 @@
 # 实验环境使用教程
 
+### 获取实验工程
+
+实验环境的代码位于[此处](https://github.com/DLD-USTB/minitinymips)
+获取实验工程可以通过以下git命令获取
+
+```shell
+git clone https://github.com/DLD-USTB/minitinymips.git
+```
+如果出现网络问题，可以尝试使用ssh方式进行下载
+```shell
+git clone git@github.com:DLD-USTB/minitinymips.git
+```
+如果你需要NJU的AM环境, 请使用下面的命令
+!> AM环境的使用不在本课程的要求内，但欢迎同学们尝试
+
+```shell
+git clone --recursive https://github.com/DLD-USTB/minitinymips.git
+```
+或者你可以在获取实验工程之后，使用下面的命令，通用可以获得AM环境
+```shell
+git submodule update --init 
+```
+
+
 ### 工程结构
 
 ```
