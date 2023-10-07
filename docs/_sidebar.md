@@ -24,5 +24,7 @@
   * [异常处理与乘除法器](/slides/L3)
   * [设备输入输出与AXI总线](/slides/L4)
   * [Cache原理与设计](/slides/L5)
-* [验收要求](grading)
+* 验收要求
+  * [验收要求-2022版](grading/grading-2022)
+  * [验收要求-2023版](grading/grading-2023)
 * [参考资料与必要资源下载](reference)
